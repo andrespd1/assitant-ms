@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - mongodb
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=my_database
+      - POSTGRES_USER=my_user
+      - POSTGRES_PASSWORD=my_password
+      - MONGODB_URI=mongodb://mongodb:27017/my_mongo_db
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      - POSTGRES_DB=my_database
+      - POSTGRES_USER=my_user
+      - POSTGRES_PASSWORD=my_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:6
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  pgdata:
+  mongo_data:
